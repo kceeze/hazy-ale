@@ -4,11 +4,13 @@ describe 'News API', type: :request do
   describe 'POST /articles' do
     let(:article_params) do
       {
-        title: 'New photography exhibition',
-        content: 'In a new exhibition at the Royal Botanic Garden Edinburgh, famous photographer explores the astonishing diversity of nature.',
-        author: 'Oscar Davies',
-        category: 'Nature',
-        published_at: '2020-02-10',
+        article: {
+          title: 'New photography exhibition',
+          content: 'In a new exhibition at the Royal Botanic Garden Edinburgh, famous photographer explores the astonishing diversity of nature.',
+          author: 'Oscar Davies',
+          category: 'Nature',
+          published_at: '2020-02-10'
+        }
       }
     end
 
@@ -55,11 +57,11 @@ describe 'News API', type: :request do
 
     context 'when title is missing' do
       let(:invalid_params) do
-        article_params.merge(title: nil)
+        article_params[:article].merge(title: nil)
       end
 
       before do
-        post '/articles', params: invalid_params
+        post '/articles', params: {article: invalid_params}
       end
 
       it 'returns status code 422' do
@@ -73,7 +75,7 @@ describe 'News API', type: :request do
       end
 
       before do
-        post '/articles', params: invalid_params
+        post '/articles', params: {article: invalid_params}
       end
 
       it 'returns status code 422' do
@@ -87,7 +89,7 @@ describe 'News API', type: :request do
       end
 
       before do
-        post '/articles', params: invalid_params
+        post '/articles', params: {article: invalid_params}
       end
 
       it 'returns status code 422' do
@@ -101,7 +103,7 @@ describe 'News API', type: :request do
       end
 
       before do
-        post '/articles', params: invalid_params
+        post '/articles', params: { article: invalid_params }
       end
 
       it 'returns status code 422' do
@@ -115,7 +117,7 @@ describe 'News API', type: :request do
       end
 
       before do
-        post '/articles', params: invalid_params
+        post '/articles', params: { article: invalid_params }
       end
 
       it 'returns status code 422' do
@@ -128,11 +130,13 @@ describe 'News API', type: :request do
     context 'when article by given ID exists' do
       let(:article_params) do
         {
-          title: 'New photography exhibition',
-          content: 'In a new exhibition at the Royal Botanic Garden Edinburgh, famous photographer explores the astonishing diversity of nature.',
-          author: 'Oscar Davies',
-          category: 'Nature',
-          published_at: '2020-02-10',
+          article: {
+            title: 'New photography exhibition',
+            content: 'In a new exhibition at the Royal Botanic Garden Edinburgh, famous photographer explores the astonishing diversity of nature.',
+            author: 'Oscar Davies',
+            category: 'Nature',
+            published_at: '2020-02-10'
+          }
         }
       end
 
@@ -157,9 +161,8 @@ describe 'News API', type: :request do
           content: 'In a new exhibition at the Royal Botanic Garden Edinburgh, famous photographer explores the astonishing diversity of nature.',
           author: 'Oscar Davies',
           category: 'Nature',
-          published_at: '2020-02-10',
+          published_at: '2020-02-10'
         }.stringify_keys
-
         expect(JSON.parse(response.body)).to eq(expected)
       end
     end
@@ -206,7 +209,7 @@ describe 'News API', type: :request do
 
       before do
         article_params.each do |params|
-          post '/articles', params: params
+          post '/articles', params: {article: params}
           fail('Cannot create an article') unless response.status == 201
         end
       end
@@ -236,18 +239,20 @@ describe 'News API', type: :request do
   describe 'DELETE /articles/:id' do
     let(:article) do
       post '/articles', params: {
-        title: 'Sakura Park Reconstruction',
-        content: 'The work will include installing a new fountain and resetting the existing granite walls.',
-        author: 'Edward Evans',
-        category: 'Nature',
-        published_at: '2020-02-11',
-      }
+        article:{
+          title: 'Sakura Park Reconstruction',
+          content: 'The work will include installing a new fountain and resetting the existing granite walls.',
+          author: 'Edward Evans',
+          category: 'Nature',
+          published_at: '2020-02-11'
+        }
+    }
       fail('Cannot create an article') unless response.status == 201
-
       JSON.parse(response.body)
     end
 
     before do
+      #added article here to account for safe params
       delete "/articles/#{article['id']}"
     end
 
@@ -259,14 +264,15 @@ describe 'News API', type: :request do
   describe 'PATCH /articles/:id' do
     let(:article) do
       post '/articles', params: {
-        title: 'Sakura Park Reconstruction',
-        content: 'The work will include installing a new fountain and resetting the existing granite walls.',
-        author: 'Edward Evans',
-        category: 'Nature',
-        published_at: '2020-02-11',
+        article: {
+          title: 'Sakura Park Reconstruction',
+          content: 'The work will include installing a new fountain and resetting the existing granite walls.',
+          author: 'Edward Evans',
+          category: 'Nature',
+          published_at: '2020-02-11'
+        }
       }
       fail('Cannot create an article') unless response.status == 201
-      
       JSON.parse(response.body)
     end
 
@@ -282,14 +288,16 @@ describe 'News API', type: :request do
   describe 'PUT /articles/:id' do
     let(:article) do
       post '/articles', params: {
-        title: 'Sakura Park Reconstruction',
-        content: 'The work will include installing a new fountain and resetting the existing granite walls.',
-        author: 'Edward Evans',
-        category: 'Nature',
-        published_at: '2020-02-11',
+        article: {
+          title: 'Sakura Park Reconstruction',
+          content: 'The work will include installing a new fountain and resetting the existing granite walls.',
+          author: 'Edward Evans',
+          category: 'Nature',
+          published_at: '2020-02-11'
+        }
       }
       fail('Cannot create an article') unless response.status == 201
-      
+
       JSON.parse(response.body)
     end
 
